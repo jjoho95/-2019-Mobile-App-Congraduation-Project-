@@ -26,34 +26,62 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <LinearLayout
+                <ScrollView
                     android:id="@+id/content1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#8BC34A"
-                        android:gravity="center"
-                        android:padding="8dp"
-                        android:text="TAB CONTENT 1" />
-
-                    <ListView
-                        android:id="@android:id/list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
-                    <TextView
-                        android:id="@android:id/empty"
-                        android:text="데이터가 없습니다."
+                    <TableLayout
+                        android:id="@+id/tableLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="20sp"
-                        android:gravity="center"/>
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                        <TableRow
+                            android:background="@drawable/border"
+                            android:orientation="horizontal">
+
+                            <TextView android:text="과목명"
+                                android:layout_width="0dp"
+                                android:textAlignment="center"
+                                android:textStyle="bold"
+                                android:layout_column="0"
+                                android:layout_weight="0.40">
+                            </TextView>
+                            <TextView android:text="학점"
+                                android:layout_width="0dp"
+                                android:textAlignment="center"
+                                android:textStyle="bold"
+                                android:layout_column="1"
+                                android:layout_weight="0.10">
+                            </TextView>
+                            <TextView android:text="성적"
+                                android:layout_width="0dp"
+                                android:textAlignment="center"
+                                android:textStyle="bold"
+                                android:layout_column="2"
+                                android:layout_weight="0.20">
+                            </TextView>
+                            <TextView android:text="교과구분"
+                                android:layout_width="0dp"
+                                android:textAlignment="center"
+                                android:textStyle="bold"
+                                android:layout_column="3"
+                                android:layout_weight="0.25">
+                            </TextView>
+                            <TextView android:text="이수완료"
+                                android:layout_width="0dp"
+                                android:textAlignment="center"
+                                android:textStyle="bold"
+                                android:layout_column="4"
+                                android:layout_weight="0.15">
+                            </TextView>
+                        </TableRow>
+
+                    </TableLayout>
+
+                </ScrollView>
 
                 <LinearLayout
                     android:id="@+id/content2"

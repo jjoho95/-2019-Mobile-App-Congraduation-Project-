@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
 
     static DBHelper helper = null;
+    private String myMajor;
 
     public static DBHelper getInstance(Context context){
         if (helper == null){
@@ -24,7 +25,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS COURSE (\n" +
-                "    Cnumber INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    Cnumber INTEGER PRIMARY KEY,\n" +
                 "    Cname VARCHAR(20),\n" +
                 "    Credit INTEGER\n" +
                 ");");
@@ -57,6 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
         for (String each : row ){
             db.execSQL(each);
         }
+
     }
 
     public void insertTakeCourse(SQLiteDatabase db, int cnum, String grade){
@@ -86,5 +88,13 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public void setMyMajor(String myMajor) {
+        this.myMajor = myMajor;
+    }
+
+    public String getMyMajor() {
+        return "computer";
     }
 }

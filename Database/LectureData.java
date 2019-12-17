@@ -174,6 +174,7 @@ public class LectureData {
     HashMap<String, Integer> index = new HashMap<>();
 
     public LectureData(){
+        int cnt = 0;
         String[] lines = computer.split("\n");
         for (String line : lines){
             String[] tokens = line.split(" ");
@@ -184,6 +185,7 @@ public class LectureData {
             conputerMap.put(tokens[0], new ArrayList<String>());
             conputerMap.get(tokens[0]).add(0, tokens[2]);
             conputerMap.get(tokens[0]).add(1, tokens[1]);
+            index.put(tokens[0], cnt++);
         }
         lines = global.split("\n");
         for (String line : lines){
@@ -195,6 +197,7 @@ public class LectureData {
             globalMap.put(tokens[0], new ArrayList<String>());
             globalMap.get(tokens[0]).add(0, tokens[2]);
             globalMap.get(tokens[0]).add(1, tokens[1]);
+            index.put(tokens[0], cnt++);
         }
     }
 
@@ -202,15 +205,14 @@ public class LectureData {
         ArrayList<String> data =  new ArrayList<>();
         int cnt = 0;
         for (String key : conputerMap.keySet()){
-            String row = "INSERT INTO COURSE (Cname, Credit) VALUES ('%s', %s);";
-            data.add(String.format(row, key, conputerMap.get(key).get(0)));
-            index.put(key, cnt++);
+            String row = "INSERT INTO COURSE (Cnumber, Cname, Credit) VALUES (%d, '%s', %s);";
+            data.add(String.format(row, index.get(key), key, conputerMap.get(key).get(0)));
+
         }
         for (String key : globalMap.keySet()){
             if (conputerMap.containsKey(key)) continue;
-            String row = "INSERT INTO COURSE (Cname, Credit) VALUES ('%s', %s);";
-            data.add(String.format(row, key, globalMap.get(key).get(0)));
-            index.put(key, cnt++);
+            String row = "INSERT INTO COURSE (Cnumber, Cname, Credit) VALUES (%d, '%s', %s);";
+            data.add(String.format(row, index.get(key), key, globalMap.get(key).get(0)));
         }
         return data;
     }
