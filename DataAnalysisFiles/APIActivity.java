@@ -1,26 +1,85 @@
 package com.example.sdfasdf;
 
 import androidx.appcompat.app.AppCompatActivity;
+import android.app.AlertDialog;
 
+
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 public class APIActivity extends AppCompatActivity {
     TextView tv;
+    private ArrayList<String> aryList;
+    private ArrayAdapter<String> adapter;
+    private ArrayList<String> SpinaryList;
+    private ArrayAdapter<String> Spinadapter;
+    private ListView listView;
+    private Spinner spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.openapi_layout);
 
+        spinner = (Spinner)findViewById(R.id.spinner);
+        SpinaryList = new ArrayList<String>();
+        listView = (ListView)findViewById(R.id.apilistview);
+        aryList = new ArrayList<String>();
+        adapter = new ArrayAdapter<String>(
+                this,
+                R.layout.public_item,
+                R.id.result,
+                aryList
+        );
+        listView.setAdapter(adapter);
+        Spinadapter = new ArrayAdapter<String>(
+                this,
+                R.layout.spinpublic_item,
+                R.id.spinresult,
+                SpinaryList
+        );
+        spinner.setAdapter(Spinadapter);
+
+
+        listView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        String item = (String)adapterView.getItemAtPosition(position);
+                        Toast.makeText(APIActivity.this,SpinaryList.get(position),Toast.LENGTH_LONG).show();
+
+//                        SpinaryList.add(item);
+//                        spinner.setAdapter(Spinadapter);
+
+                    }
+                }
+        );
+
+
+
+
+
+
+
+
+
+
         StrictMode.enableDefaults();
 
-        TextView status1 = (TextView)findViewById(R.id.result); //파싱된 결과확인!
+//        TextView status1 = (TextView)findViewById(R.id.result); //파싱된 결과확인!
 
         boolean initem = false, inAddr = false, inChargeTp = false, inCpId = false, inCpNm = false;
         boolean inCpStat = false, inCpTp = false, inCsId = false, inCsNm = false, inLat=false;
@@ -32,7 +91,7 @@ public class APIActivity extends AppCompatActivity {
 
         try{
             URL url = new URL("http://apis.data.go.kr/B551982/openApiNewHire/openXmlNewHire?"
-                    + "serviceKey=QJCQzdyrL%2B%2FS8LdGWhPZUnIAfJP2AVuNAfH2w6FnR0HEHb7091BNrgCauojlhRfjyra3Y5Wd7xxd20Me0OcKfQ%3D%3D&type=xml&numOfRows=10&pageNo=1&ac_year=2016"
+                    + "serviceKey=QJCQzdyrL%2B%2FS8LdGWhPZUnIAfJP2AVuNAfH2w6FnR0HEHb7091BNrgCauojlhRfjyra3Y5Wd7xxd20Me0OcKfQ%3D%3D&type=xml&numOfRows=10&pageNo=1&ac_year=2018"
             ); //검색 URL부분
 
             XmlPullParserFactory parserCreator = XmlPullParserFactory.newInstance();
@@ -133,10 +192,18 @@ public class APIActivity extends AppCompatActivity {
                         break;
                     case XmlPullParser.END_TAG:
                         if(parser.getName().equals("item")){
-                            status1.setText(status1.getText()+"No : "+ addr +"\n AC_YEAR: "+ chargeTp +"\n ENT_NAME : " + cpId
-                                    +"\n TOTALEMP : " + cpNm +  "\n ENGINEER : " + cpStat+ "\n COLLEGE : " + cpTp
-                                    +"\n HSCHOOL : " +csId + "\n WOMAN : " + csNm + "\n HANDICAP : " +lat
-                                    +"\n NKL_RESIDENT : " +longi +"\n YOUNG : " +statUpdateDatetime+"\n");
+//                            status1.setText(status1.getText()+"No : "+ addr +" 기업명 : " + cpId
+//                                    +" 총 모집 인원 : " + cpNm +  " 기술직 : " + cpStat+ " 전문대졸 : " + cpTp
+//                                    +" 고졸 : " +csId + " 여성 : " + csNm + " 장애인 : " +lat
+//                                    +" 지방인재 : " +longi +" 신입 : " +statUpdateDatetime+"\n\n");
+                            SpinaryList.add(" 기업명 : " + cpId
+                                    +" 총 모집 인원 : " + cpNm +  " 기술직 : " + cpStat+ " 전문대졸 : " + cpTp
+                                    +" 고졸 : " +csId + " 여성 : " + csNm + " 장애인 : " +lat
+                                    +" 지방인재 : " +longi +" 신입 : " +statUpdateDatetime+"\n\n");
+                            aryList.add(cpId);
+                            listView.setAdapter(adapter);
+
+
                             initem = false;
                         }
                         break;
@@ -144,7 +211,7 @@ public class APIActivity extends AppCompatActivity {
                 parserEvent = parser.next();
             }
         } catch(Exception e){
-            status1.setText(e.toString());
+//            status1.setText(e.toString());
         }
     }
 }

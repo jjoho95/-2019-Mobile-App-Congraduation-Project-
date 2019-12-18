@@ -8,19 +8,42 @@
     android:orientation="vertical">
 
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foregroundTint="#FFFFFF"
+        android:gravity="center"
+        android:text="성 적 기 준"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        android:onClick="onImgBtnClicked"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/englang" />
 
     <Button
         android:id="@+id/Addbutton"
-        android:layout_width="match_parent"
+        android:layout_width="139dp"
         android:layout_height="wrap_content"
-        android:text="파일첨부"
-        android:onClick="onAddbtnclicked"/>
+        android:backgroundTint="#B7673AB7"
+        android:foregroundTint="#00FFFFFF"
+        android:onClick="onAddbtnclicked"
+        android:textStyle="bold"
+        android:text="파일첨부" />
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/previewbtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="showDocumentFile"
-        android:text="미리보기" />
+
+
+
+
 </LinearLayout>

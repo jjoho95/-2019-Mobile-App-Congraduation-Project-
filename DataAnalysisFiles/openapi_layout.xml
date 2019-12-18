@@ -7,14 +7,18 @@
     tools:context=".APIActivity"
     android:orientation="vertical">
 
-    <ScrollView
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/apilistview">
 
-        <TextView
-            android:id="@+id/result"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            />
-    </ScrollView>
+    </ListView>
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/app_name"/>
+
+
 </LinearLayout>
