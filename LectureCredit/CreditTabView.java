@@ -1,9 +1,6 @@
 package com.example.teamproject;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.appcompat.widget.AppCompatTextView;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,14 +20,14 @@ import java.util.ArrayList;
 public class CreditTabView extends AppCompatActivity {
     SQLiteDatabase db;
     private TableLayout tableLayout;
-    String myMajor = DBHelper.getInstance(this).getMyMajor();
+    String myMajor;
     DBHelper helper;
     int tableRows;
 
     ArrayList<TextView> cnameList = new ArrayList<>();
     ArrayList<TextView> creditList = new ArrayList<>();
     ArrayList<Spinner> gradeList = new ArrayList<>();
-    ArrayList<TextView> categoryList = new ArrayList<>();
+    ArrayList<Spinner> categoryList = new ArrayList<>();
     ArrayList<CheckBox> takesList = new ArrayList<>();
 
     @Override
@@ -57,12 +53,15 @@ public class CreditTabView extends AppCompatActivity {
             public void onTabChanged(String tabId) {
                 if("Tab Spec 2".equals(tabId)) {
                     updateDB();
+                    showReport();
                 }
             }});
 
         helper = DBHelper.getInstance(this);
+        myMajor = helper.getMyMajor(this);
         db = helper.getReadableDatabase();
-        if (helper.isFirst()){
+        if (helper.isFirst(this)){
+            helper.setFirst(0, this);
             helper.initDB(db);
         }
         setTable();
@@ -101,7 +100,7 @@ public class CreditTabView extends AppCompatActivity {
                 TextView cname = tableRow.findViewById(R.id.cname);
                 TextView credit = tableRow.findViewById(R.id.credit);
                 Spinner grade = tableRow.findViewById(R.id.grade);
-                TextView category = tableRow.findViewById(R.id.category);
+                Spinner category = tableRow.findViewById(R.id.category);
                 CheckBox takes = tableRow.findViewById(R.id.takes);
 
                 Integer creditResult = c.getInt(c.getColumnIndex("Credit"));
@@ -109,35 +108,47 @@ public class CreditTabView extends AppCompatActivity {
                 credit.setText(creditResult.toString());
                 grade.setAdapter(getCreditAdapter());
 
-                Cursor c2 = db.rawQuery("SELECT Grade " +
+                Cursor c2 = db.rawQuery("SELECT Category " +
+                        "   FROM COURSE_CATEGORY" +
+                        "   WHERE Cno ="+ c.getInt(c.getColumnIndex("Cnumber")) +
+                        "   AND Major = '"+ myMajor + "'" +
+                        "   ORDER BY Cno;", null);
+                if (c2.getCount() > 0) {
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    c2.moveToFirst();
+                    do {
+                        arrayList.add(c2.getString(c2.getColumnIndex("Category")));
+                    } while (c2.moveToNext());
+                    category.setAdapter(new ArrayAdapter<>(this, R.layout.spinner_item, R.id.spinner_text, arrayList));
+                    if (c2.getCount() == 1) {
+                        category.setEnabled(false);
+                    }
+                }
+
+                c2 = db.rawQuery("SELECT Grade, Category " +
                         "   FROM TAKE_COURSE" +
                         "   WHERE Cnum = "+ c.getInt(c.getColumnIndex("Cnumber"))+
                         "   ORDER BY Cnum;", null);
                 if (c2.getCount() > 0){
                     c2.moveToFirst();
                     takes.setChecked(true);
-                    String selected = c2.getString(c.getColumnIndex("Grade"));
+                    String selected = c2.getString(c2.getColumnIndex("Grade"));
                     for (int i = 0; i < grade.getAdapter().getCount(); i++) {
                         if(grade.getAdapter().getItem(i).toString().contains(selected)) {
                             grade.setSelection(i);
                             break;
                         }
                     }
+                    selected = c2.getString(c2.getColumnIndex("Category"));
+                    for (int i = 0; i < category.getAdapter().getCount(); i++) {
+                        if(category.getAdapter().getItem(i).toString().contains(selected)) {
+                            category.setSelection(i);
+                            break;
+                        }
+                    }
                 }
-                c2 = db.rawQuery("SELECT Category " +
-                        "   FROM COURSE_CATEGORY" +
-                        "   WHERE Cno ="+ c.getInt(c.getColumnIndex("Cnumber")) +
-                        "   AND Major = '"+ myMajor + "'" +
-                        "   ORDER BY Cno;", null);
-                if (c2.getCount() > 0){
-                    c2.moveToFirst();
-                    do {
-                        category.setText(c2.getString(c2.getColumnIndex("Category"))+"\n");
-                    } while(c2.moveToNext());
-                }
-                tableLayout.addView(tableRow);
                 c2.close();
-
+                tableLayout.addView(tableRow);
                 cnameList.add(cname);
                 creditList.add(credit);
                 gradeList.add(grade);
@@ -154,7 +165,8 @@ public class CreditTabView extends AppCompatActivity {
             int cnum = -1;
             TextView cname = cnameList.get(i);
             Spinner grade = gradeList.get(i);
-            TextView takes = takesList.get(i);
+            CheckBox takes = takesList.get(i);
+            Spinner cateogry = categoryList.get(i);
 
             Cursor c = db.rawQuery("SELECT Cnumber FROM COURSE WHERE Cname = '"+ cname.getText().toString() +"';", null);
             if (c.getCount() > 0){
@@ -162,13 +174,13 @@ public class CreditTabView extends AppCompatActivity {
                 cnum = c.getInt(c.getColumnIndex("Cnumber"));
             }
 
-            if (takes.toString() != null){
+            if (takes.isChecked()){
                 c = db.rawQuery("SELECT Cnum FROM TAKE_COURSE WHERE Cnum = "+ cnum + ";", null);
                 if (c.getCount() > 0){
-                    helper.updateTakeCourse(db, grade.toString(), cnum);
+                    helper.updateTakeCourse(db, grade.getSelectedItem().toString(), cateogry.getSelectedItem().toString(), cnum);
                 }
                 else {
-                    helper.insertTakeCourse(db, cnum, grade.toString());
+                    helper.insertTakeCourse(db, cnum, grade.getSelectedItem().toString(), cateogry.getSelectedItem().toString());
                 }
             }
             else {
@@ -200,6 +212,11 @@ public class CreditTabView extends AppCompatActivity {
         arrayList.add("F");
         arrayList.add("U");
         arrayList.add("S");
-        return new ArrayAdapter<>(this, R.layout.spinner_item, R.id.spinner_grade, arrayList);
+        return new ArrayAdapter<>(this, R.layout.spinner_item, R.id.spinner_text, arrayList);
     }
+
+    private void showReport(){
+
+    }
+
 }

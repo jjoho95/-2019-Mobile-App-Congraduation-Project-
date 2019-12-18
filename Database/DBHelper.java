@@ -4,13 +4,15 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
 
     static DBHelper helper = null;
-    private String myMajor = "global";
-    private boolean isFirst = true;
     private LectureData lecture;
 
     public static DBHelper getInstance(Context context){
@@ -34,6 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS TAKE_COURSE (\n" +
                 "    Cnum INTEGER PRIMARY KEY,\n" +
                 "    Grade VARCHAR(2) NOT NULL,\n" +
+                "    Category Text NOT NULL,\n" +
                 "    FOREIGN KEY(Cnum) REFERENCES COURSE (Cumber)\n" +
                 ");");
         db.execSQL("CREATE TABLE IF NOT EXISTS COURSE_CATEGORY (\n" +
@@ -64,14 +67,14 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void insertTakeCourse(SQLiteDatabase db, int cnum, String grade){
-        db.execSQL(String.format("INSERT INTO TAKE_COURSE (Cnum, Grade) VALUES (%d, '%s');", cnum, grade));
+    public void insertTakeCourse(SQLiteDatabase db, int cnum, String grade, String category){
+        db.execSQL(String.format("INSERT INTO TAKE_COURSE (Cnum, Grade, Category) VALUES (%d, '%s', '%s');", cnum, grade, category));
     }
     public void deleteTakeCourse(SQLiteDatabase db, int cnum){
         db.execSQL(String.format("DELETE FROM TAKE_COURSE WHERE Cnum = %d;", cnum));
     }
-    public void updateTakeCourse(SQLiteDatabase db, String grade, int cnum){
-        db.execSQL(String.format("UPDATE TAKE_COURSE SET Grade = '%s' WHERE cnum = %d;", grade, cnum));
+    public void updateTakeCourse(SQLiteDatabase db, String grade, String category, int cnum){
+        db.execSQL(String.format("UPDATE TAKE_COURSE SET Grade = '%s', Category = '%s' WHERE cnum = %d;", grade, category, cnum));
     }
 
     public void insertCourseCategory(SQLiteDatabase db, String major, int cno, String category){
@@ -93,23 +96,49 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void setMyMajor(String myMajor) {
-        this.myMajor = myMajor;
+    public void setMyMajor(String myMajor, Context context) {
+        File path = context.getFilesDir();
+        File file = new File(path, "major.txt");
+        try {
+            FileWriter writer = new FileWriter(file);
+            writer.write(myMajor);
+            writer.close();
+        } catch (Exception e){}
     }
 
-    public String getMyMajor() {
-        return myMajor;
+    public String getMyMajor(Context context) {
+        File path = context.getFilesDir();
+        File file = new File(path, "major.txt");
+        try{
+            int length = (int) file.length();
+            byte[] bytes = new byte[length];
+            FileInputStream in = new FileInputStream(file);
+            in.read(bytes);
+            return new String(bytes);
+        } catch (Exception e){}
+        return "global";
     }
 
-    public boolean isFirst() {
-        return isFirst;
+    public boolean isFirst(Context context) {
+        File path = context.getFilesDir();
+        File file = new File(path, "initDB.txt");
+        try{
+            FileReader reader = new FileReader(file);
+            if (0 == reader.read()){
+                return false;
+            }
+            reader.close();
+        } catch (Exception e){}
+        return true;
     }
 
-    public void setFirst(boolean first) {
-        isFirst = first;
-    }
-
-    public int getMaxCnum(){
-        return lecture.getMaxCount();
+    public void setFirst(int first, Context context) {
+        File path = context.getFilesDir();
+        File file = new File(path, "initDB.txt");
+        try {
+            FileWriter writer = new FileWriter(file);
+            writer.write(first);
+            writer.close();
+        } catch (Exception e){}
     }
 }
