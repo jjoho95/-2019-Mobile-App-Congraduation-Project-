@@ -9,7 +9,9 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
 
     static DBHelper helper = null;
-    private String myMajor;
+    private String myMajor = "global";
+    private boolean isFirst = true;
+    private LectureData lecture;
 
     public static DBHelper getInstance(Context context){
         if (helper == null){
@@ -48,17 +50,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 "    File TEXT,\n" +
                 "    Remark TEXT\n" +
                 ");");
+    }
 
-        LectureData data = new LectureData();
-        ArrayList<String> row = data.getCourseData();
+    public void initDB(SQLiteDatabase db){
+        lecture = new LectureData();
+        ArrayList<String> row = lecture.getCourseData();
         for (String each : row ){
             db.execSQL(each);
         }
-        row = data.getCategoryData();
+        row = lecture.getCategoryData();
         for (String each : row ){
             db.execSQL(each);
         }
-
     }
 
     public void insertTakeCourse(SQLiteDatabase db, int cnum, String grade){
@@ -67,8 +70,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public void deleteTakeCourse(SQLiteDatabase db, int cnum){
         db.execSQL(String.format("DELETE FROM TAKE_COURSE WHERE Cnum = %d;", cnum));
     }
-    public void updateTakeCourse(SQLiteDatabase db, String grade, String where){
-        db.execSQL(String.format("UPDATE TAKE_COURSE SET Grade = '%s' WHERE %s;", grade, where));
+    public void updateTakeCourse(SQLiteDatabase db, String grade, int cnum){
+        db.execSQL(String.format("UPDATE TAKE_COURSE SET Grade = '%s' WHERE cnum = %d;", grade, cnum));
     }
 
     public void insertCourseCategory(SQLiteDatabase db, String major, int cno, String category){
@@ -95,6 +98,18 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public String getMyMajor() {
-        return "computer";
+        return myMajor;
+    }
+
+    public boolean isFirst() {
+        return isFirst;
+    }
+
+    public void setFirst(boolean first) {
+        isFirst = first;
+    }
+
+    public int getMaxCnum(){
+        return lecture.getMaxCount();
     }
 }

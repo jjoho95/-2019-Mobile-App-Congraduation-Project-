@@ -235,4 +235,8 @@ public class LectureData {
         }
         return data;
     }
+
+    public int getMaxCount(){
+        return index.size();
+    }
 }

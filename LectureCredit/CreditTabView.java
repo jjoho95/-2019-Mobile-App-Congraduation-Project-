@@ -1,6 +1,9 @@
 package com.example.teamproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,11 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -21,33 +25,59 @@ public class CreditTabView extends AppCompatActivity {
     SQLiteDatabase db;
     private TableLayout tableLayout;
     String myMajor = DBHelper.getInstance(this).getMyMajor();
+    DBHelper helper;
+    int tableRows;
+
+    ArrayList<TextView> cnameList = new ArrayList<>();
+    ArrayList<TextView> creditList = new ArrayList<>();
+    ArrayList<Spinner> gradeList = new ArrayList<>();
+    ArrayList<TextView> categoryList = new ArrayList<>();
+    ArrayList<CheckBox> takesList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit_tab_view);
 
-        TabHost tabHost1 = findViewById(R.id.tabHost1);
-        tabHost1.setup();
+        TabHost tabHost = findViewById(R.id.tabHost1);
+        tabHost.setup();
 
-        TabHost.TabSpec ts1 = tabHost1.newTabSpec("Tab Spec 1");
+        TabHost.TabSpec ts1 = tabHost.newTabSpec("Tab Spec 1");
         ts1.setContent(R.id.content1);
         ts1.setIndicator("성적 입력");
-        tabHost1.addTab(ts1);
+        tabHost.addTab(ts1);
 
-        TabHost.TabSpec ts2 = tabHost1.newTabSpec("Tab Spec 2");
+        TabHost.TabSpec ts2 = tabHost.newTabSpec("Tab Spec 2");
         ts2.setContent(R.id.content2);
         ts2.setIndicator("보고서");
-        tabHost1.addTab(ts2);
+        tabHost.addTab(ts2);
 
-        db = DBHelper.getInstance(this).getReadableDatabase();
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
+            @Override
+            public void onTabChanged(String tabId) {
+                if("Tab Spec 2".equals(tabId)) {
+                    updateDB();
+                }
+            }});
+
+        helper = DBHelper.getInstance(this);
+        db = helper.getReadableDatabase();
+        if (helper.isFirst()){
+            helper.initDB(db);
+        }
         setTable();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        setTable();
+    protected void onPause() {
+        super.onPause();
+        updateDB();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        updateDB();
     }
 
     private void setTable() {
@@ -63,7 +93,8 @@ public class CreditTabView extends AppCompatActivity {
                 "   ORDER BY Cnumber;", null);
         tableLayout = findViewById(R.id.tableLayout);
 
-        if (c.getCount() > 0) {
+        tableRows = c.getCount();
+        if (tableRows > 0) {
             c.moveToFirst();
             do {
                 View tableRow = LayoutInflater.from(this).inflate(R.layout.layout_item_credit, null, false);
@@ -73,12 +104,11 @@ public class CreditTabView extends AppCompatActivity {
                 TextView category = tableRow.findViewById(R.id.category);
                 CheckBox takes = tableRow.findViewById(R.id.takes);
 
-               // System.out.println(c.getInt(c.getColumnIndex("Cnumber")));
-
                 Integer creditResult = c.getInt(c.getColumnIndex("Credit"));
                 cname.setText(c.getString(c.getColumnIndex("Cname")));
                 credit.setText(creditResult.toString());
                 grade.setAdapter(getCreditAdapter());
+
                 Cursor c2 = db.rawQuery("SELECT Grade " +
                         "   FROM TAKE_COURSE" +
                         "   WHERE Cnum = "+ c.getInt(c.getColumnIndex("Cnumber"))+
@@ -88,7 +118,7 @@ public class CreditTabView extends AppCompatActivity {
                     takes.setChecked(true);
                     String selected = c2.getString(c.getColumnIndex("Grade"));
                     for (int i = 0; i < grade.getAdapter().getCount(); i++) {
-                        if(grade.getAdapter().getItem(i).toString().contains(selected)){
+                        if(grade.getAdapter().getItem(i).toString().contains(selected)) {
                             grade.setSelection(i);
                             break;
                         }
@@ -102,15 +132,55 @@ public class CreditTabView extends AppCompatActivity {
                 if (c2.getCount() > 0){
                     c2.moveToFirst();
                     do {
-                        category.setText(c2.getColumnIndex("Category")+"\n");
+                        category.setText(c2.getString(c2.getColumnIndex("Category"))+"\n");
                     } while(c2.moveToNext());
                 }
                 tableLayout.addView(tableRow);
                 c2.close();
 
+                cnameList.add(cname);
+                creditList.add(credit);
+                gradeList.add(grade);
+                categoryList.add(category);
+                takesList.add(takes);
+
             } while (c.moveToNext());
             c.close();
         }
+    }
+
+    private void updateDB(){
+        for (int i = 0; i < tableRows; i++){
+            int cnum = -1;
+            TextView cname = cnameList.get(i);
+            Spinner grade = gradeList.get(i);
+            TextView takes = takesList.get(i);
+
+            Cursor c = db.rawQuery("SELECT Cnumber FROM COURSE WHERE Cname = '"+ cname.getText().toString() +"';", null);
+            if (c.getCount() > 0){
+                c.moveToFirst();
+                cnum = c.getInt(c.getColumnIndex("Cnumber"));
+            }
+
+            if (takes.toString() != null){
+                c = db.rawQuery("SELECT Cnum FROM TAKE_COURSE WHERE Cnum = "+ cnum + ";", null);
+                if (c.getCount() > 0){
+                    helper.updateTakeCourse(db, grade.toString(), cnum);
+                }
+                else {
+                    helper.insertTakeCourse(db, cnum, grade.toString());
+                }
+            }
+            else {
+                helper.deleteTakeCourse(db, cnum);
+            }
+            c.close();
+        }
+        Toast.makeText(this,"저장되었습니다", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onAddGrade(View view){
+
     }
 
     private ArrayAdapter<String> getCreditAdapter(){
