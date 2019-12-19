@@ -1,4 +1,4 @@
-package com.example.teamproject;
+package com.example.congraduation;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -37,14 +37,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 "    Cnum INTEGER PRIMARY KEY,\n" +
                 "    Grade VARCHAR(2) NOT NULL,\n" +
                 "    Category Text NOT NULL,\n" +
-                "    FOREIGN KEY(Cnum) REFERENCES COURSE (Cumber)\n" +
+                "    FOREIGN KEY(Cnum) REFERENCES COURSE (Cnumber)\n" +
                 ");");
         db.execSQL("CREATE TABLE IF NOT EXISTS COURSE_CATEGORY (\n" +
                 "    Id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "    Major TEXT NOT NULL,\n" +
                 "    Cno INTEGER NOT NULL,\n" +
                 "    Category TEXT NOT NULL,\n" +
-                "    FOREIGN KEY(Cno) REFERENCES COURSE (Cumber)\n" +
+                "    FOREIGN KEY(Cno) REFERENCES COURSE (Cnumber)\n" +
                 ");");
         db.execSQL("CREATE TABLE IF NOT EXISTS ATTACHMENT (\n" +
                 "    ID INTEGER PRIMARY KEY AUTOINCREMENT,\n" +

@@ -1,4 +1,4 @@
-package com.example.teamproject;
+package com.example.congraduation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -220,11 +220,28 @@ public class CreditTabView extends AppCompatActivity {
         reportLayout = findViewById(R.id.content2);
         ArrayList<Integer> list = new ArrayList<>();
 
+        int totalCredit = 0;
         if (myMajor.equals("global")){
-            list.add(0); list.add(1); list.add(2); list.add(3); list.add(4);
+            list.add(0); list.add(2); list.add(1); list.add(3); list.add(4);
+            totalCredit = 130;
         } else {
             list.add(0); list.add(5); list.add(6); list.add(7);
+            totalCredit = 150;
         }
+
+        db.execSQL("DROP VIEW IF EXISTS view_temp;");
+        db.execSQL("CREATE VIEW view_temp AS" +
+                "   SELECT Cnumber, Cname, Credit, Grade" +
+                "   FROM COURSE, TAKE_COURSE" +
+                "   WHERE Cnum = Cnumber" +
+                "   ORDER BY Cnumber;");
+        db.execSQL("DROP VIEW IF EXISTS view_report;");
+        db.execSQL("CREATE VIEW view_report AS" +
+                "   SELECT Cnumber, Cname, Credit, Grade, Category" +
+                "   FROM view_temp JOIN COURSE_CATEGORY" +
+                "   ON Cnumber = Cno" +
+                "   WHERE Major = '" + myMajor + "'" +
+                "   ORDER BY Cnumber;");
 
         for (int i : list){
             View report = LayoutInflater.from(this).inflate(R.layout.layout_item_report, null, false);
@@ -241,7 +258,7 @@ public class CreditTabView extends AppCompatActivity {
             rTask.setProgress(progress);
             rTask.setCheck(check);
             rTask.setInfo(info);
-            rTask.setTotalCredit(130);
+            rTask.setTotalCredit(totalCredit);
             try {
                 rTask.execute(i);
                 rTask.wait();

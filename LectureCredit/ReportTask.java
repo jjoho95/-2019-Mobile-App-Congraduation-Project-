@@ -7,6 +7,7 @@ import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+
 public class ReportTask extends AsyncTask<Integer, Double, Integer> {
 
     TextView credit;
@@ -36,14 +37,14 @@ public class ReportTask extends AsyncTask<Integer, Double, Integer> {
             case 0: // 전체 학점
                 requiredCredit = (double)totalCredit;
                 credit.setText("   총 학점  :");
-                c = db.rawQuery("SELECT Credit, Grade FROM view_report;", null);
+                c = db.rawQuery("SELECT Credit, Grade FROM view_temp;", null);
                 break;
-            case 1: // 글솝 - 전공
+            case 2: // 글솝 - 전공
                 requiredCredit = 51D;
                 credit.setText("   전공  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '전공';", null);
                 break;
-            case 2: // 글솝 - 융합
+            case 1: // 글솝 - 융합
                 requiredCredit = 36D;
                 credit.setText("   융합전공  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '융합전공';", null);
@@ -74,6 +75,7 @@ public class ReportTask extends AsyncTask<Integer, Double, Integer> {
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '기본소양';", null);
                 break;
         }
+
         if ((gradeCount = (double)c.getCount()) > 0){
             c.moveToFirst();
             do {
