@@ -1,4 +1,4 @@
-package com.example.teamproject;
+package com.example.congraduation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -178,7 +178,7 @@ public class LectureData {
         String[] lines = computer.split("\n");
         for (String line : lines){
             String[] tokens = line.split(" ");
-            if (conputerMap.containsValue(tokens[0])){
+            if (conputerMap.containsKey(tokens[0])){
                 conputerMap.get(tokens[0]).add(tokens[1]);
                 continue;
             }
@@ -203,7 +203,6 @@ public class LectureData {
 
     public ArrayList<String> getCourseData(){
         ArrayList<String> data =  new ArrayList<>();
-        int cnt = 0;
         for (String key : conputerMap.keySet()){
             String row = "INSERT INTO COURSE (Cnumber, Cname, Credit) VALUES (%d, '%s', %s);";
             data.add(String.format(row, index.get(key), key, conputerMap.get(key).get(0)));
