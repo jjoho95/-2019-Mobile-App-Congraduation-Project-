@@ -169,7 +169,7 @@ public class LectureData {
             "알기쉬운창업마케팅 교양 3\n" +
             "알기쉬운창업마케팅 창업교과목 3\n";
 
-    HashMap<String, ArrayList<String>> conputerMap = new HashMap<>();
+    HashMap<String, ArrayList<String>> computerMap = new HashMap<>();
     HashMap<String, ArrayList<String>> globalMap = new HashMap<>();
     HashMap<String, Integer> index = new HashMap<>();
 
@@ -178,13 +178,13 @@ public class LectureData {
         String[] lines = computer.split("\n");
         for (String line : lines){
             String[] tokens = line.split(" ");
-            if (conputerMap.containsKey(tokens[0])){
-                conputerMap.get(tokens[0]).add(tokens[1]);
+            if (computerMap.containsKey(tokens[0])){
+                computerMap.get(tokens[0]).add(tokens[1]);
                 continue;
             }
-            conputerMap.put(tokens[0], new ArrayList<String>());
-            conputerMap.get(tokens[0]).add(0, tokens[2]);
-            conputerMap.get(tokens[0]).add(1, tokens[1]);
+            computerMap.put(tokens[0], new ArrayList<String>());
+            computerMap.get(tokens[0]).add(0, tokens[2]);
+            computerMap.get(tokens[0]).add(1, tokens[1]);
             index.put(tokens[0], cnt++);
         }
         lines = global.split("\n");
@@ -203,13 +203,13 @@ public class LectureData {
 
     public ArrayList<String> getCourseData(){
         ArrayList<String> data =  new ArrayList<>();
-        for (String key : conputerMap.keySet()){
+        for (String key : computerMap.keySet()){
             String row = "INSERT INTO COURSE (Cnumber, Cname, Credit) VALUES (%d, '%s', %s);";
-            data.add(String.format(row, index.get(key), key, conputerMap.get(key).get(0)));
+            data.add(String.format(row, index.get(key), key, computerMap.get(key).get(0)));
 
         }
         for (String key : globalMap.keySet()){
-            if (conputerMap.containsKey(key)) continue;
+            if (computerMap.containsKey(key)) continue;
             String row = "INSERT INTO COURSE (Cnumber, Cname, Credit) VALUES (%d, '%s', %s);";
             data.add(String.format(row, index.get(key), key, globalMap.get(key).get(0)));
         }
@@ -218,11 +218,11 @@ public class LectureData {
 
     public ArrayList<String> getCategoryData(){
         ArrayList<String> data =  new ArrayList<>();
-        for (String key : conputerMap.keySet()){
+        for (String key : computerMap.keySet()){
             String row = "INSERT INTO COURSE_CATEGORY (Major, Cno, Category) VALUES ('%s', %d, '%s');";
-            int size = conputerMap.get(key).size();
+            int size = computerMap.get(key).size();
             for (int i = 1; i < size; i++){
-                data.add(String.format(row, "computer", index.get(key), conputerMap.get(key).get(i)));
+                data.add(String.format(row, "computer", index.get(key), computerMap.get(key).get(i)));
             }
         }
         for (String key : globalMap.keySet()){

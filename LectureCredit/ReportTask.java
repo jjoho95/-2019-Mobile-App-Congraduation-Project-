@@ -2,10 +2,13 @@ package com.example.congraduation;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 
 public class ReportTask extends AsyncTask<Integer, Double, Integer> {
@@ -17,6 +20,7 @@ public class ReportTask extends AsyncTask<Integer, Double, Integer> {
     SQLiteDatabase db;
     String myMajor;
     int totalCredit;
+    ArrayList<String> checkList = new ArrayList<>();
 
     @Override
     protected void onPreExecute() {
@@ -36,15 +40,15 @@ public class ReportTask extends AsyncTask<Integer, Double, Integer> {
         switch(integers[0]){
             case 0: // 전체 학점
                 requiredCredit = (double)totalCredit;
-                credit.setText("   총 학점  :");
+                credit.setText("   전체 학점  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_temp;", null);
                 break;
-            case 2: // 글솝 - 전공
+            case 1: // 글솝 - 전공
                 requiredCredit = 51D;
                 credit.setText("   전공  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '전공';", null);
                 break;
-            case 1: // 글솝 - 융합
+            case 2: // 글솝 - 융합
                 requiredCredit = 36D;
                 credit.setText("   융합전공  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '융합전공';", null);
@@ -93,6 +97,7 @@ public class ReportTask extends AsyncTask<Integer, Double, Integer> {
             averageGrade = gradeSum / gradeCount;
             publishProgress(averageGrade, currentCredit, requiredCredit);
         }
+
         return null;
     }
 
@@ -104,7 +109,7 @@ public class ReportTask extends AsyncTask<Integer, Double, Integer> {
         if (values[1] >= values[2]){
             check.setChecked(true);
         }
-        info.setText(String.format("현재 이수학점/졸업 기준학점 : (%d/%d)\n성적 : %.2f\n",
+        info.setText(String.format("현재 이수학점/졸업 기준학점 : (%d/%d)\n성적 : %.2f/4.3\n",
                 values[1].intValue(), values[2].intValue(), values[0]));
     }
 

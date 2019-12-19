@@ -2,14 +2,20 @@ package com.example.congraduation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
@@ -219,10 +225,13 @@ public class CreditTabView extends AppCompatActivity {
     private void showReport(){
         reportLayout = findViewById(R.id.content2);
         ArrayList<Integer> list = new ArrayList<>();
+        ListView listView = new ListView(this);
+        ArrayList<String> required = new ArrayList<>();
+        ArrayList<String> checked = new ArrayList<>();
 
         int totalCredit = 0;
         if (myMajor.equals("global")){
-            list.add(0); list.add(2); list.add(1); list.add(3); list.add(4);
+            list.add(0); list.add(1); list.add(2); list.add(3); list.add(4);
             totalCredit = 130;
         } else {
             list.add(0); list.add(5); list.add(6); list.add(7);
@@ -242,6 +251,12 @@ public class CreditTabView extends AppCompatActivity {
                 "   ON Cnumber = Cno" +
                 "   WHERE Major = '" + myMajor + "'" +
                 "   ORDER BY Cnumber;");
+        db.execSQL("DROP VIEW IF EXISTS view_check;");
+        db.execSQL("CREATE VIEW view_check AS" +
+                "   SELECT Cno" +
+                "   FROM COURSE_CATEGORY" +
+                "   WHERE Category = '전공필수'" +
+                "   AND Major = '" + myMajor + "';");
 
         for (int i : list){
             View report = LayoutInflater.from(this).inflate(R.layout.layout_item_report, null, false);
@@ -267,6 +282,48 @@ public class CreditTabView extends AppCompatActivity {
             reportLayout.addView(report);
             reportLayout.addView(report_sub);
         }
+
+        TextView text = new TextView(this);
+        text.setText("필수과목 체크리스트");
+        text.setTextSize(20);
+        text.setPadding(10, 10, 20, 10);
+        text.setGravity(Gravity.CENTER);
+        text.setBackgroundColor(Color.rgb(246, 187, 67));
+        reportLayout.addView(text);
+
+        Cursor c = db.rawQuery("SELECT DISTINCT Cname " +
+                "   FROM view_check, view_report" +
+                "   WHERE Cnumber = Cno" +
+                "   ORDER BY Cname;", null);
+        if (c.getCount() > 0){
+            c.moveToFirst();
+            do {
+                checked.add(c.getString(c.getColumnIndex("Cname")));
+            } while(c.moveToNext());
+        }
+
+        c = db.rawQuery("SELECT DISTINCT Cname " +
+                "   FROM view_check, COURSE" +
+                "   WHERE Cnumber = Cno" +
+                "   ORDER BY Cname;", null);
+        if (c.getCount() > 0){
+            c.moveToFirst();
+            do {
+                required.add(c.getString(c.getColumnIndex("Cname")));
+            } while(c.moveToNext());
+        }
+
+        CustomChoiceListViewAdapter adapter = new CustomChoiceListViewAdapter();
+        listView.setAdapter(adapter);
+
+        for (String course : required){
+            if (checked.contains(course)){
+                adapter.addItem(true, course);
+            } else {
+                adapter.addItem(false, course);
+            }
+        }
+        reportLayout.addView(listView);
     }
 
     private void deleteReport(){
@@ -274,4 +331,51 @@ public class CreditTabView extends AppCompatActivity {
         reportLayout.removeAllViewsInLayout();
     }
 
+    private class CustomChoiceListViewAdapter extends BaseAdapter {
+        ArrayList<CheckListItem> listViewItemList = new ArrayList<>();
+
+        @Override
+        public int getCount() {
+            return listViewItemList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return listViewItemList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final Context context = parent.getContext();
+
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.layout_listview_report, parent, false);
+            }
+
+            TextView textTextView = convertView.findViewById(R.id.text_list);
+            CheckBox checkboxView = convertView.findViewById(R.id.check_list);
+
+            CheckListItem listViewItem = listViewItemList.get(position);
+
+            textTextView.setText(listViewItem.getText());
+            checkboxView.setChecked(listViewItem.getChecked());
+
+            return convertView;
+        }
+
+        public void addItem(Boolean checked, String text) {
+            CheckListItem item = new CheckListItem();
+            item.setChecked(checked);
+            item.setText(text);
+            listViewItemList.add(item);
+        }
+    }
+
 }
+
