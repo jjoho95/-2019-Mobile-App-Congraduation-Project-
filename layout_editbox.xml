@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="저장"
+            android:onClick="onClickListener"/>
+
+        <Button
+            android:id="@+id/buttonAddFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="첨부파일"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="삭제"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/editTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="제목"/>
+
+    <EditText
+        android:id="@+id/editTextContent"
+        android:layout_width="match_parent"
+        android:layout_height="158dp"
+        android:hint="활동 내용" />
+
+    <EditText
+        android:id="@+id/editTextPeriod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="활동 기간"/>
+
+    <EditText
+        android:id="@+id/editTextFeeling"
+        android:layout_width="match_parent"
+        android:layout_height="132dp"
+        android:hint="느낀점" />
+
+    <ImageView
+        android:id="@+id/editImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
