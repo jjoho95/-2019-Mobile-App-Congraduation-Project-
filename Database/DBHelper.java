@@ -116,7 +116,7 @@ public class DBHelper extends SQLiteOpenHelper {
             in.read(bytes);
             return new String(bytes);
         } catch (Exception e){}
-        return "global";
+        return null;
     }
 
     public boolean isFirst(Context context) {

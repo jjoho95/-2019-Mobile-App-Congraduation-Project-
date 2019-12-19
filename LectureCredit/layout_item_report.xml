@@ -6,14 +6,17 @@
 
     <TextView
         android:layout_width="0dp"
+        android:textSize="20dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.33"
         android:id="@+id/report_credit"/>
 
     <ProgressBar
         android:layout_width="0dp"
+        style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_height="wrap_content"
         android:layout_weight="0.34"
+        android:progress="0"
         android:id="@+id/report_progress"/>
 
     <CheckBox

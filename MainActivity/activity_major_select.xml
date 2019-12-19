@@ -26,13 +26,13 @@
 
     <Spinner
         android:id="@+id/select_major"
-        android:layout_width="200dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:spinnerMode="dialog" />
 
     <Spinner
-        android:layout_width="200dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:spinnerMode="dialog"
         android:layout_centerInParent="true"

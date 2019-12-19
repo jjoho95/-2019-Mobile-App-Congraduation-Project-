@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TableLayout;
@@ -19,7 +21,8 @@ import java.util.ArrayList;
 
 public class CreditTabView extends AppCompatActivity {
     SQLiteDatabase db;
-    private TableLayout tableLayout;
+    TableLayout tableLayout;
+    LinearLayout reportLayout;
     String myMajor;
     DBHelper helper;
     int tableRows;
@@ -54,6 +57,8 @@ public class CreditTabView extends AppCompatActivity {
                 if("Tab Spec 2".equals(tabId)) {
                     updateDB();
                     showReport();
+                } else {
+                    deleteReport();
                 }
             }});
 
@@ -191,10 +196,6 @@ public class CreditTabView extends AppCompatActivity {
         Toast.makeText(this,"저장되었습니다", Toast.LENGTH_SHORT).show();
     }
 
-    public void onAddGrade(View view){
-
-    }
-
     private ArrayAdapter<String> getCreditAdapter(){
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("A+");
@@ -216,7 +217,44 @@ public class CreditTabView extends AppCompatActivity {
     }
 
     private void showReport(){
+        reportLayout = findViewById(R.id.content2);
+        ArrayList<Integer> list = new ArrayList<>();
 
+        if (myMajor.equals("global")){
+            list.add(0); list.add(1); list.add(2); list.add(3); list.add(4);
+        } else {
+            list.add(0); list.add(5); list.add(6); list.add(7);
+        }
+
+        for (int i : list){
+            View report = LayoutInflater.from(this).inflate(R.layout.layout_item_report, null, false);
+            View report_sub = LayoutInflater.from(this).inflate(R.layout.layout_item_report_2, null, false);
+            TextView credit = report.findViewById(R.id.report_credit);
+            ProgressBar progress = report.findViewById(R.id.report_progress);
+            CheckBox check = report.findViewById(R.id.report_check);
+            TextView info = report_sub.findViewById(R.id.report_info);
+
+            ReportTask rTask = new ReportTask();
+            rTask.setMyMajor(myMajor);
+            rTask.setDb(db);
+            rTask.setCredit(credit);
+            rTask.setProgress(progress);
+            rTask.setCheck(check);
+            rTask.setInfo(info);
+            rTask.setTotalCredit(130);
+            try {
+                rTask.execute(i);
+                rTask.wait();
+            }catch (Exception e){}
+
+            reportLayout.addView(report);
+            reportLayout.addView(report_sub);
+        }
+    }
+
+    private void deleteReport(){
+        reportLayout = findViewById(R.id.content2);
+        reportLayout.removeAllViewsInLayout();
     }
 
 }
