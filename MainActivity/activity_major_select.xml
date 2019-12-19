@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/select_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="학과 : "
+        android:layout_centerInParent="true"
+        android:layout_toLeftOf="@+id/select_major"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="세부 전공 : "
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/select_textview"
+        android:layout_toLeftOf="@+id/select_major_specific"/>
+
+    <Spinner
+        android:id="@+id/select_major"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:spinnerMode="dialog" />
+
+    <Spinner
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dialog"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/select_major"
+        android:id="@+id/select_major_specific"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/select_major_specific"
+        android:id="@+id/select_button"
+        android:onClick="onSelectMajor"
+        android:text="선택완료"/>
+
+</RelativeLayout>
