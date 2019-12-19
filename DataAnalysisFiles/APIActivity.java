@@ -196,10 +196,10 @@ public class APIActivity extends AppCompatActivity {
 //                                    +" 총 모집 인원 : " + cpNm +  " 기술직 : " + cpStat+ " 전문대졸 : " + cpTp
 //                                    +" 고졸 : " +csId + " 여성 : " + csNm + " 장애인 : " +lat
 //                                    +" 지방인재 : " +longi +" 신입 : " +statUpdateDatetime+"\n\n");
-                            SpinaryList.add(" 기업명 : " + cpId
-                                    +" 총 모집 인원 : " + cpNm +  " 기술직 : " + cpStat+ " 전문대졸 : " + cpTp
-                                    +" 고졸 : " +csId + " 여성 : " + csNm + " 장애인 : " +lat
-                                    +" 지방인재 : " +longi +" 신입 : " +statUpdateDatetime+"\n\n");
+                            SpinaryList.add(" 기업명 : " + cpId.replaceAll("\n","")+"\n"
+                                    +" 총 모집 인원 : " + cpNm.replaceAll("\n","")+"\n" +  " 기술직 : " + cpStat.replaceAll("\n","")+"\n"+ " 전문대졸 : " + cpTp.replaceAll("\n","")
+                                    +"\n"+" 고졸 : " +csId.replaceAll("\n","") +"\n"+ " 여성 : " + csNm.replaceAll("\n","") +"\n"+ " 장애인 : " +lat.replaceAll("\n","")
+                                    +"\n" +" 지방인재 : " +longi.replaceAll("\n","") +"\n"+" 신입 : " +statUpdateDatetime.replaceAll("\n",""));
                             aryList.add(cpId);
                             listView.setAdapter(adapter);
 

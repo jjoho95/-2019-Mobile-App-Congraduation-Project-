@@ -7,15 +7,26 @@
     tools:context="com.example.sdfasdf.MainActivity"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
     <Button
         android:id="@+id/button"
-        android:layout_width="251dp"
+        android:layout_width="218dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="#1EBCD4"
+        android:backgroundTint="#FFEB3B"
         android:onClick="onAPIButtonClicked"
-        android:text="취업정보 확인"
+        android:text="취업정보"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
 
     <TableLayout
         android:layout_width="wrap_content"
@@ -33,9 +44,9 @@
 
                 <ImageButton
                     android:id="@+id/GradeButton"
-                    android:layout_width="155dp"
+                    android:layout_width="match_parent"
                     android:layout_height="165dp"
-                    android:backgroundTint="#7CFF9800"
+                    android:backgroundTint="#00BFA5"
                     android:onClick="onGradeButtonClicked"
                     app:srcCompat="@drawable/grade1" />
 
@@ -58,7 +69,7 @@
                     android:id="@+id/LangButton"
                     android:layout_width="155dp"
                     android:layout_height="165dp"
-                    android:backgroundTint="#7CFF9800"
+                    android:backgroundTint="#6200EA"
                     android:onClick="onLangButtonClicked"
                     app:srcCompat="@drawable/lang" />
 
@@ -87,7 +98,7 @@
                     android:id="@+id/InternButton"
                     android:layout_width="155dp"
                     android:layout_height="165dp"
-                    android:backgroundTint="#7CFF9800"
+                    android:backgroundTint="#0091EA"
                     android:onClick="onInternButtonClicked"
                     app:srcCompat="@drawable/intern" />
 
@@ -110,7 +121,7 @@
                     android:id="@+id/AwardButton"
                     android:layout_width="155dp"
                     android:layout_height="165dp"
-                    android:backgroundTint="#7CFF9800"
+                    android:backgroundTint="#64DD17"
                     android:onClick="onAwardButtonClicked"
                     app:srcCompat="@drawable/award2" />
 

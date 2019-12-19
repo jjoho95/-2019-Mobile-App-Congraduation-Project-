@@ -17,8 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:backgroundTint="#FFC107"
-        android:textStyle="bold"
+        android:backgroundTint="#FFEB3B"
         android:onClick="showDocumentFile"
-        android:text="미리보기" />
+        android:text="Preview"
+        android:textStyle="bold" />
 </LinearLayout>
