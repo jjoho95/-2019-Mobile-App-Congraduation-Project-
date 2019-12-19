@@ -1,4 +1,4 @@
-package com.example.teamproject;
+package com.example.congraduation;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,58 +32,51 @@ public class ReportTask extends AsyncTask<Integer, Double, Integer> {
         Double currentCredit = 0D;
         Double gradeCount = 0D;
 
-        db.execSQL("DROP VIEW IF EXISTS view_report;");
-        db.execSQL("CREATE VIEW view_report AS" +
-                "   SELECT Cnumber, Cname, Credit, Grade, Category" +
-                "   FROM COURSE, TAKE_COURSE" +
-                "   WHERE Cnum = Cnumber" +
-                "   ORDER BY Cnumber;");
-
         switch(integers[0]){
             case 0: // 전체 학점
                 requiredCredit = (double)totalCredit;
-                credit.setText("   총 학점 :");
+                credit.setText("   총 학점  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report;", null);
                 break;
             case 1: // 글솝 - 전공
                 requiredCredit = 51D;
-                credit.setText("   전공 :");
+                credit.setText("   전공  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '전공';", null);
                 break;
             case 2: // 글솝 - 융합
                 requiredCredit = 36D;
-                credit.setText("   융합전공 :");
+                credit.setText("   융합전공  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '융합전공';", null);
                 break;
             case 3: // 글솝 - 교양
                 requiredCredit = 30D;
-                credit.setText("   교양 :");
+                credit.setText("   교양  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '교양';", null);
                 break;
             case 4: // 글솝 - 창업교과목
                 requiredCredit = 9D;
-                credit.setText("   창업교과목 :");
+                credit.setText("   창업교과목  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '창업교과목';", null);
                 break;
             case 5: // 심컴 - 공학전공
                 requiredCredit = 75D;
-                credit.setText("   공학전공 :");
+                credit.setText("   공학전공  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '공학전공';", null);
                 break;
             case 6: // 심컴 - 전공기반
                 requiredCredit = 22D;
-                credit.setText("   전공기반 :");
+                credit.setText("   전공기반  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '전공기반';", null);
                 break;
             case 7: // 심컴 - 기본소양
                 requiredCredit = 15D;
-                credit.setText("   기본소양 :");
+                credit.setText("   기본소양  :");
                 c = db.rawQuery("SELECT Credit, Grade FROM view_report WHERE Category = '기본소양';", null);
                 break;
         }
         if ((gradeCount = (double)c.getCount()) > 0){
+            c.moveToFirst();
             do {
-                c.moveToFirst();
                 int tempCredit = c.getInt(c.getColumnIndex("Credit"));
                 currentCredit += tempCredit;
                 double tempGrade;
@@ -106,7 +99,7 @@ public class ReportTask extends AsyncTask<Integer, Double, Integer> {
         super.onProgressUpdate(values);
         progress.setMax(values[2].intValue());
         progress.setProgress(values[1].intValue());
-        if (values[1] == values[2]){
+        if (values[1] >= values[2]){
             check.setChecked(true);
         }
         info.setText(String.format("현재 이수학점/졸업 기준학점 : (%d/%d)\n성적 : %.2f\n",
