@@ -1,4 +1,4 @@
-package com.example.sdfasdf;
+package com.example.congraduation;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -94,38 +94,38 @@ public class LangActivity extends AppCompatActivity {
 //        // 파일 확장자별 Mime Type을 지정한다.
         if (_strPath.endsWith("mp3"))
         {
-            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.sdfasdf.fileProvider", file), "audio/*");
+            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.congraduation.fileProvider", file), "audio/*");
         }
         else if (_strPath.endsWith("mp4"))
         {
-            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.sdfasdf.fileProvider", file), "vidio/*");
+            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.congraduation.fileProvider", file), "vidio/*");
         }
         else if (_strPath.endsWith("jpg") || _strPath.endsWith("jpeg") ||
                 _strPath.endsWith("JPG") || _strPath.endsWith("gif") ||
                 _strPath.endsWith("png") || _strPath.endsWith("bmp"))
         {
-            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.sdfasdf.fileProvider", file), "image/*");
+            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.congraduation.fileProvider", file), "image/*");
         }
         else if (_strPath.endsWith("txt"))
         {
-            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.sdfasdf.fileProvider", file), "text/*");
+            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.congraduation.fileProvider", file), "text/*");
         }
         else if (_strPath.endsWith("doc") || _strPath.endsWith("docx"))
         {
-            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.sdfasdf.fileProvider", file), "application/msword");
+            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.congraduation.fileProvider", file), "application/msword");
         }
         else if (_strPath.endsWith("xls") || _strPath.endsWith("xlsx"))
         {
-            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.sdfasdf.fileProvider", file),
+            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.congraduation.fileProvider", file),
                     "application/vnd.ms-excel");
         }
         else if (_strPath.endsWith("ppt") || _strPath.endsWith("pptx"))
         {
-            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.sdfasdf.fileProvider", file),
+            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.congraduation.fileProvider", file),
                     "application/vnd.ms-powerpoint");
         }
         else if (_strPath.endsWith("pdf")) {
-            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.sdfasdf.fileProvider", file), "application/pdf");
+            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.congraduation.fileProvider", file), "application/pdf");
 
         }
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -265,7 +265,7 @@ public class LangActivity extends AppCompatActivity {
 
         intent.setAction(android.content.Intent.ACTION_VIEW);
         File file = new File(_strPath);
-        intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.sdfasdf.fileProvider", file), "image/*");
+        intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), "com.example.congraduation.fileProvider", file), "image/*");
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(intent);
     }

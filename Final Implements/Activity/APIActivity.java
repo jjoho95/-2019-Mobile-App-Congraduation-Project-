@@ -1,10 +1,8 @@
-package com.example.sdfasdf;
+package com.example.congraduation;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.app.AlertDialog;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
@@ -67,15 +65,6 @@ public class APIActivity extends AppCompatActivity {
                     }
                 }
         );
-
-
-
-
-
-
-
-
-
 
         StrictMode.enableDefaults();
 

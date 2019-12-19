@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sdfasdf">
+    package="com.example.congraduation">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -15,27 +15,37 @@
         android:usesCleartextTraffic="true">
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.sdfasdf.fileProvider"
+            android:authorities="com.example.congraduation.fileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_path"/>
         </provider>
-        <activity android:name=".LangActivity">
+        <activity android:name="com.example.congraduation.LangActivity">
+
+        </activity>
+        <activity android:name="com.example.congraduation.CreditTabView" />
+        <activity android:name="com.example.congraduation.InternActivity" />
+        <activity android:name="com.example.congraduation.AwardActivity" />
+
+        <activity android:name="com.example.congraduation.Splash"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".GradeActivity" />
-        <activity android:name=".InternActivity" />
-        <activity android:name=".AwardActivity" />
-        <activity android:name=".MainActivity">
 
         </activity>
-        <activity android:name=".APIActivity" />
+
+        <activity android:name="com.example.congraduation.ResultActivity"/>
+        <activity android:name="com.example.congraduation.MainActivity">
+
+        </activity>
+        <activity android:name="com.example.congraduation.APIActivity" />
 
     </application>
 
